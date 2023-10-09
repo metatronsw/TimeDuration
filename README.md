@@ -4,8 +4,6 @@ A simple swift structure representing a period of time. It is simply stored in a
 
 Why a separate structure when Swift already has its own Duration structure ? Because Swift Duration uses two components, and the fractional seconds are measured in attoseconds, which further complicates and slows down the traditional millisecond-based timecode time measurement.
 
-Translated with www.DeepL.com/Translator (free version)
-
 Examples of use: 
 
 		let enum: TimeDuration = .zero
@@ -19,5 +17,5 @@ Examples of use:
 		let milliseconds = TimeDuration(msec: 9130001)
 		
 		
-		timeCode.
+	
 		
