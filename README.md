@@ -8,7 +8,7 @@ Translated with www.DeepL.com/Translator (free version)
 
 Examples of use: 
 
-		let zero: TimeDuration = .zero
+		let enum: TimeDuration = .zero
 		
 		let components: TimeDuration = .hours(2) + .minutes(32) + .seconds(10) + .milliseconds(001)
 		
@@ -17,4 +17,7 @@ Examples of use:
 		let integers = TimeDuration(hour: 2, min: 32, sec: 10, msec: 001)
 
 		let milliseconds = TimeDuration(msec: 9130001)
+		
+		
+		timeCode.
 		
