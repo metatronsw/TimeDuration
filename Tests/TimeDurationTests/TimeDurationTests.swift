@@ -35,6 +35,34 @@ final class TimeDurationTests: XCTestCase {
 		let zero: TimeDuration = .zero
 		XCTAssertEqual(zero, "00:00:00.000")
 		
+		let components: TimeDuration = .hours(2) + .minutes(32) + .seconds(10) + .milliseconds(001)
+		XCTAssertEqual(components, "02:32:10.001")
+		
+		let ints = TimeDuration(hour: 2, min: 32, sec: 10, msec: 001)
+		XCTAssertEqual(ints, "02:32:10.001")
+		
+		let mints = TimeDuration(msec: 9130001)
+		XCTAssertEqual(mints, "02:32:10.001")
+		
+		let strings = TimeDuration(hour: "02", min: "32", sec: "10", msec: "001")
+		XCTAssertEqual(strings, "02:32:10.001")
+		
+		let mstrings = TimeDuration(msec: "9130001")
+		XCTAssertEqual(mstrings, "02:32:10.001")
+		
+		let timeCode = TimeDuration("02:32:10.001")
+		XCTAssertEqual(timeCode, "02:32:10.001")
+		
+		let timeString = TimeDuration(string: "32:10.001")
+		XCTAssertEqual(timeString, "00:32:10.001")
+		
+		let milliseconds = TimeDuration(msec: 9130001)
+		XCTAssertEqual(milliseconds, "02:32:10.001")
+		
+		let tcc = TimeDuration.TCC(hour: 2, min: 32, sec: 10, msec: 001)
+		let tcComponents = TimeDuration(tcc)
+		XCTAssertEqual(tcComponents, "02:32:10.001")
+		
     }
 	
 	

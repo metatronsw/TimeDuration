@@ -18,10 +18,6 @@ public struct TimeDuration: Codable, CustomStringConvertible {
 	///
 	public var msec: UInt64
 	
-	/// Initialisation by exact value
-	///
-	public init(msec: UInt64) { self.msec = msec }
-	
 	
 	
 	/// Accurate and strict conversion from timecode string
@@ -83,25 +79,29 @@ public struct TimeDuration: Codable, CustomStringConvertible {
 	
 	
 	
-	// INIT ----
+	/// Initialisation from unsigned integer format on milliseconds basis
+	///
+	public init(msec: UInt64) {
+		self.msec = msec
+	}
 	
-	/// Initialisation from integer format on SECOND basis
+	
+	/// Initialisation from Time Code Units
 	///
 	public init(_ tcc: TCC) {
 		self.msec = Self.tccToMSec(tcc)
 	}
 	
 	
-	/// Initialisation from floating point format on SECOND basis
+	/// Initialisation by separated time values
 	///
-	public init(_ double: Double) {
-		self.msec = UInt64(double * 1_000)
+	public init(hour: Int = 0, min: Int = 0, sec: Int = 0, msec: Int = 0) {
+		self.msec = UInt64(hour) * 3600_000 + UInt64(min) * 60_000 + UInt64(sec) * 1_000 + UInt64(msec)
 	}
 	
-	
-	/// Initialisation by separated time units
+	/// Initialisation by separated time string units
 	///
-	public init?(hour: String, min: String, sec: String, msec: String) {
+	public init?(hour: String = "00", min: String = "00", sec: String = "00", msec: String = "00") {
 		guard let h = UInt64(hour), let m = UInt64(min), let s = UInt64(sec), let ms = UInt64(msec) else { return nil }
 		self.msec = h * 3600_000 + m * 60_000 + s * 1_000 + ms
 	}
@@ -109,7 +109,7 @@ public struct TimeDuration: Codable, CustomStringConvertible {
 	
 	/// Initialization by any time format, or unofficial - freely formatted timecode
 	///
-	public init?(_ string: String, separator: String = ":", decimal: String = ".") {
+	public init?(string: String, separator: String = ":", decimal: String = ".") {
 		guard let tcc = TimeDuration.stringToTcc(string, separator: separator, decimal: decimal) else { return nil }
 		self.init(tcc)
 	}
@@ -121,6 +121,9 @@ public struct TimeDuration: Codable, CustomStringConvertible {
 		guard let tcc = TimeDuration.timeCodeToTcc(timecode) else { return nil }
 		self.init(tcc)
 	}
+	
+	
+	
 	
 	
 	
@@ -167,6 +170,9 @@ public struct TimeDuration: Codable, CustomStringConvertible {
 	
 	
 	public var seconds: Int { return Int(msec / 1_000) }
+	public var minutes: Int { return Int(msec / 60_000) }
+	public var hours: Int { return Int(msec / 3600_000) }
+	public var days: Int { return Int(msec / 8640_000) }
 	
 	
 }
@@ -189,19 +195,19 @@ extension TimeDuration: AdditiveArithmetic, Hashable, Comparable, Equatable, Exp
 		self.init(msec: value * 1_000)
 	}
 	
-	public init(stringLiteral string: String) {
-		guard let tcc = TimeDuration.timeCodeToTcc(string) else { fatalError("Incorrect timecode string literal: \(string)") }
-		self.init(tcc)
-	}
-	
-	public init(floatLiteral float: Double) {
-		self.init(float)
-	}
-	
 	public init?<T>(exactly source: T) where T : BinaryInteger {
 		self.init(msec: UInt64(source) * 1_000)
 	}
 	
+	public init(floatLiteral float: Double) {
+		self.init(msec: UInt64(float * 1_000) )
+	}
+	
+	public init(stringLiteral string: String) {
+		guard let tcc = TimeDuration.timeCodeToTcc(string)
+		else { fatalError("Incorrect timecode string literal: \(string)") }
+		self.init(tcc)
+	}
 	
 	
 	static public func + (lhs: TimeDuration, rhs: TimeDuration) -> TimeDuration {
